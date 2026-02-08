@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MessageType {
+  text
+  image
+  video
+  file
+}
+
+enum MessageStatus {
+  sent
+  delivered
+}
+
+model Message {
+  id          String        @id @default(uuid())
+  senderId    String
+  content     String?
+  type        MessageType
+  fileUrl     String?
+  fileName    String?
+  fileSize    Int?
+  mimeType    String?
+  status      MessageStatus @default(sent)
+  createdAt   DateTime      @default(now())
+  deliveredAt DateTime?
+
+  @@index([createdAt])
+  @@index([senderId])
+}
